@@ -8,7 +8,8 @@ class Menu extends Component {
         super(props)
         this.state={
             selectedDish:null
-        };
+        }
+        console.log("Menu component constructor is invoked");
 
         
     }
@@ -55,11 +56,9 @@ class Menu extends Component {
 
                 </div> // You must assign a key to each item
                     
-            )
-                
-        
-
+            );
         });
+        console.log("Render component constructor is invoked");
         return(
 
             

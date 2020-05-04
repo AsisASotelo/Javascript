@@ -8,9 +8,19 @@ import {DISHES} from './shared/dishes';
 
 
 
-function App(props) {
+class App extends React.Component {
+
+  constructor(props){
+    super(props);
   
 
+  this.state={
+    dishes:DISHES
+  };
+}
+  
+
+  render(){
 
   return (
     <div className="App">
@@ -27,7 +37,8 @@ function App(props) {
 
 
     </div>
-  );
+    );
+}
 }
 
 export default App;

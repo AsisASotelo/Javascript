@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import {Breadcrumb, BreadcrumbItem,Button,Input, Row, Form,FormGroup,Label, Col, FormFeedback} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import {Control, LocalForm, Errors} from 'react-redux-form';
@@ -13,9 +14,11 @@ const validEmail = (val) => /^[A-Z0-9._%=-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val
 
 
 
+
 class Contact extends Component{
     constructor(props){
         super(props);
+
         
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,6 +43,7 @@ class Contact extends Component{
         console.log("Current State is: " + JSON.stringify(values))
         alert("Current state is: " + JSON.stringify(values))
         
+
     }
 
     handleBlur= (field) =>(evt)=>{
@@ -47,6 +51,7 @@ class Contact extends Component{
             touched:{...this.state.touched, [field]:true}
         });
     }
+
 
     // validate(firstname,lastname,telnum,email){
     //     const errors={
@@ -84,8 +89,11 @@ class Contact extends Component{
 
 
 
+
     render(){
+
         // const errors=this.validate(this.state.firstname, this.state.lastname,this.state.telnum, this.state.email)
+
         return(
             <div className="container">
                 <Breadcrumb>
@@ -130,6 +138,7 @@ class Contact extends Component{
                         <h3>Send us Your Feedback</h3>
                     </div>
                     <div className="col-12 col-md-9">
+
                         <LocalForm onSubmit = {(values)=>this.handleSubmit(values)}>
                             <Row className="form-group">
                                 <Label htmlFor="firstname" md={2}>FirstName</Label>
@@ -290,13 +299,16 @@ class Contact extends Component{
                                 </Col>
                             </Row>
                             <Row className="form-group">
+
                                 <Col md={{size:10, offset:2}}/>
                                 <Button type="submit" color="primary">
                                     Send Feedback
                                 </Button>
+
                             </Row>
                             
                         </LocalForm>
+
 
                     </div>
                 </div>

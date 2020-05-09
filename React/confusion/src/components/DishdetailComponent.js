@@ -30,7 +30,7 @@ import { Link } from 'react-router-dom';
 
 
 
-    function RenderComments({comments}){
+    function RenderComments({comments,addComment,dishId}){
 
             if(comments!=null)
                 return (
@@ -47,7 +47,8 @@ import { Link } from 'react-router-dom';
                             })}
 
                         </ul>
-                           
+
+                           <CommentForm dishId={dishId} addComment={addComment}/>
 
 
                     </div>
@@ -74,7 +75,9 @@ import { Link } from 'react-router-dom';
                 </div>
                 <div className="row">
                         <RenderDish dish = {props.dish}/>
-                        <RenderComments comments = {props.comments}/>
+                        <RenderComments comments = {props.comments}
+                            addComment={props.addComment}
+                            dishId={props.dish.id}/>
                 </div>
             </div>
         );

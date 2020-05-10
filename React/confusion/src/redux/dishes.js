@@ -1,4 +1,3 @@
-import {DISHES} from '../shared/dishes';
 
 //Implementation of splitting the reducer along with action implementation.
 

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import {Control,LocalForm,Errors} from 'react-redux-form';
 import {Loading} from './LoadingComponent';
 import {baseUrl} from '../shared/baseURL';
+import {FadeTransform, Fade, Stagger} from 'react-animation-components';
     function RenderDish({dish}){
 
         console.log("Dish detail render invoked")
@@ -12,13 +13,18 @@ import {baseUrl} from '../shared/baseURL';
         if(dish !=null){
             return(
                 <div className="col-12 col-sm-12 col-md-5 m-1">
-                <Card>
-                    <CardImg width="100%" src={baseUrl + dish.image} alt = {dish.name}/>
-                    <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+                    <FadeTransform in 
+                    tranformProps ={{
+                        exitTranform: 'scale(0.5) translateY(-50%)' 
+                }}>
+                        <Card>
+                            <CardImg width="100%" src={baseUrl + dish.image} alt = {dish.name}/>
+                            <CardBody>
+                            <CardTitle>{dish.name}</CardTitle>
+                                <CardText>{dish.description}</CardText>
+                            </CardBody>
+                        </Card>
+                    </FadeTransform>
                 </div>
             );
 
@@ -39,14 +45,17 @@ import {baseUrl} from '../shared/baseURL';
                     <div className = "col-12 col-md-5 m-1">
                         <ul className="list-unstyled">
 
-                            {comments.map((comment) => {
-                                return(
-                                    <li key={comment.id}>
-                                        <p>{comment.comment}</p>
-                                        <p>--{comment.author}</p>
-                                    </li>
-                                );
-                            })}
+                            <Stagger in>
+
+                                {comments.map((comment) => {
+                                    return(
+                                        <li key={comment.id}>
+                                            <p>{comment.comment}</p>
+                                            <p>--{comment.author}</p>
+                                        </li>
+                                    );
+                                })}
+                            </Stagger>
 
                         </ul>
 

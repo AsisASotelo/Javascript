@@ -20,7 +20,7 @@ export const postComment = (dishId, rating,author,comment) => (dispatch) => {
 
     return fetch(baseUrl + 'comments', {
         method: 'POST',
-        body: JSON.stringify(newComment) //Post requires you to send message in the body
+        body: JSON.stringify(newComment), //Post requires you to send message in the body
         header: {
             'Content-Type': 'application/json'
         },

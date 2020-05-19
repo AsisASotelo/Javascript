@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import {Breadcrumb, BreadcrumbItem,Button,Input, Row, FormGroup,Label, Col, FormFeedback} from 'reactstrap';
+import {Breadcrumb, BreadcrumbItem,Button, Row,Label, Col} from 'reactstrap';
 import {Link} from 'react-router-dom';
-import {Control, Form, Errors, actions} from 'react-redux-form';
+import {Control, Form, Errors} from 'react-redux-form';
 
 
 const required= (val) => val && val.length;

@@ -1,11 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
+
+//import the createForms from react redux form
+import {createForms} from 'react-redux-form';
 // import {Reducer, initialState} from './reducer';
-import { DISHES } from '../shared/dishes';
-import { COMMENTS } from '../shared/comments';
-import { PROMOTIONS } from '../shared/promotions';
-import { LEADERS } from '../shared/leaders';
+import { Dishes } from './dishes';
+import { Comments } from './comments';
+import { Promotions } from './promotions';
+import { Leaders } from './leaders';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
+import { InitialFeedback} from './forms';
 
 
 
@@ -15,10 +19,13 @@ export const ConfigureStore = () => {
         // Reducer,
         // initialState OLD IMPLEMENTATION ONLY ONE REDUCER
         combineReducers({
-            dishes: DISHES,
-            comments:COMMENTS,
-            promotions: PROMOTIONS,
-            leaders:LEADERS
+            dishes: Dishes,
+            comments:Comments,
+            promotions: Promotions,
+            leaders:Leaders,
+            ...createForms( // React redux forms fills actiontypes on its own
+                {feedback:InitialFeedback}
+            )
         }),
         applyMiddleware(thunk,logger) //Being supplied into the store as enhancers, they become available
     );

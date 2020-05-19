@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {Card,CardText,CardBody,CardTitle, CardImg, Breadcrumb,BreadcrumbItem} from 'reactstrap';
 import { Link } from 'react-router-dom';
-
+import {Control,LocalForm,Errors} from 'react-redux-form';
+import {Loading} from './LoadingComponent';
+import {baseUrl} from '../shared/baseURL';
     function RenderDish({dish}){
 
         console.log("Dish detail render invoked")
@@ -11,7 +13,7 @@ import { Link } from 'react-router-dom';
             return(
                 <div className="col-12 col-sm-12 col-md-5 m-1">
                 <Card>
-                    <CardImg width="100%" src={dish.image} alt = {dish.name}/>
+                    <CardImg width="100%" src={baseUrl + dish.image} alt = {dish.name}/>
                     <CardBody>
                     <CardTitle>{dish.name}</CardTitle>
                         <CardText>{dish.description}</CardText>
@@ -30,7 +32,7 @@ import { Link } from 'react-router-dom';
 
 
 
-    function RenderComments({comments,addComment,dishId}){
+    function RenderComments({comments,postComment,dishId}){
 
             if(comments!=null)
                 return (
@@ -48,7 +50,7 @@ import { Link } from 'react-router-dom';
 
                         </ul>
 
-                           <CommentForm dishId={dishId} addComment={addComment}/>
+                           {/* <CommentForm dishId={dishId} addComment={addComment}/> */}
 
 
                     </div>
@@ -58,7 +60,30 @@ import { Link } from 'react-router-dom';
     
 
     const DishDetail= (props) => {
+        
+        if(props.isLoading){
+            return(
+                <div className="container">
+                    <div className="row">
+                        <Loading/>
+                    </div>
+                </div>
+            )
+        }
+        else if(props.errMess){
+            return(
+                <div className="container">
+                    <div className="row">
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            )
+            
+        
 
+        }
+
+        if(props.dish!=null)
         return(
             <div className="container">
                 <div className="row">
@@ -76,7 +101,7 @@ import { Link } from 'react-router-dom';
                 <div className="row">
                         <RenderDish dish = {props.dish}/>
                         <RenderComments comments = {props.comments}
-                            addComment={props.addComment}
+                            postComment={props.postComment}
                             dishId={props.dish.id}/>
                 </div>
             </div>

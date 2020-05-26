@@ -8,6 +8,8 @@ function Menu(props) {
     // The renderItem {index} parameter takes whatever data in the keyExtractor
     // param, which is supposed to be a string
 
+    // To Trigger you must add onPress = {() => props.onPress(item.id)}
+
     const renderMenuItem = ({item,index}) =>{
         return(
             <ListItem 
@@ -15,6 +17,7 @@ function Menu(props) {
                 title = {item.name}
                 subtitle = {item.description}
                 hideChevron={true}
+                onPress = {() => props.onPress(item.id)}
                 leftAvatar = {{ source: require('./images/uthappizza.png')}} // This is javascript item supplied as an object, the require should be in the code, when you say require it has to be an EXACT image name.
                 />
 

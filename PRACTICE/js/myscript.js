@@ -1,4 +1,4 @@
-
+//TWO SUM
 // Given an array of integers, return indices of the two number such that they add up to a specific
 // target
 
@@ -23,7 +23,7 @@ var twoSum2 = (numArray,target) =>{
         const otherNum = target - numArray[num]
 
         if(otherNum in numObject){
-            return[numArray[num], otherNum]
+            return[numObject[num], otherNum]
         }
         numObject[numArray[num]] = num
     }
@@ -39,10 +39,50 @@ console.log(twoSum2(array,9))
 // Given a signed integer reverse digits of an integers
 
 var reverse = (x) => {
-    if(x.length %2 ==0 ){
-        for(i in x){
-            x[i] = 
-        }
+    newArray= []
+    for(let i=x.length-1;i >=0;i--){
+        newArray.push(x[i])
     }
+    return newArray
 }
+
+console.log(reverse(array))
+
+var fizzbuzz = (n) => {
+    let arr = []
+
+
+    for(let i = 1; i <= n; i++){
+        if( i % 15===0){
+            arr.push("Fizzbuzz")
+        }else if(i % 5=== 0){
+
+            arr.push("buzz")
+
+        }else if (i % 3 ===0){
+            arr.push("Fizz")
+        }else{
+            arr.push(i.toString())
+        }
+
+    }
+
+    console.log(arr)
+
+}
+
+fizzbuzz(20)
+
+// Contains duplicates
+
+
+const mirror_bits = (n) => {
+    return n.toString().split("").reverse().join()
+}
+
+console.log(mirror_bits(1101000))
+
+const pageTitle = document.querySelector(".box") // First element with the h2 tag
+
+console.log(pageTitle)
 

@@ -22,6 +22,9 @@ var twoSum2 = (numArray,target) =>{
     for(let num in numArray) {
         const otherNum = target - numArray[num]
 
+        //Could also use the numObject.has()
+        //To get the value of the indexed value use the numberIndex.get(complement)
+
         if(otherNum in numObject){
             return[numObject[num], otherNum]
         }
@@ -112,4 +115,69 @@ var isPalindrome = function(x) {
  
 }
 
-console.log(isPalindrome(1111))
+var isPalindromeV2 = function(x){
+    
+    x = x.toString().split("")
+
+    arr_idx = x.length - 1
+    console.log("x.length is " + x.length)
+    console.log("arr_idx" + arr_idx)
+    
+    // Must implement this for even numbers
+
+    for(let i = 0; i <=  Math.floor(x.length/2); i++){
+        
+     if( !(x[i] === x[arr_idx - i]) ){
+         return false
+     }
+     
+           
+    }
+    return true
+}
+
+console.log(isPalindromeV2(1111))
+
+// Roman to Integer
+
+var romanToInteger = (s) => {
+
+    let romanToInt = {
+        I:1,
+        V:5,
+        X:10,
+        L:50,
+        C:100,
+        D:500,
+        M:1000,
+    
+    };
+
+    let total = 0;
+    for(let i = 0; i<s.length;i++){
+        let curr = romanToInt[s.charAt(i)];
+        let next = romanToInt[s.charAt(i+1)];
+
+        if(next){
+            if(curr >= next) {
+                total += curr;
+
+            } else {
+                total += (next - curr);
+                i++;
+            }
+        
+        
+        }else {
+                total += curr;
+            }
+    }
+
+    return total;
+    
+
+}
+
+console.log(romanToInteger("MCMXCVI"))
+
+

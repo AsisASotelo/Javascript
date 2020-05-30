@@ -67,22 +67,49 @@ var fizzbuzz = (n) => {
 
     }
 
-    console.log(arr)
+    arr.forEach(x => {
+        console.log(x)
+    })
 
 }
 
 fizzbuzz(20)
 
-// Contains duplicates
+//Reverse Bits
 
-
-const mirror_bits = (n) => {
-    return n.toString().split("").reverse().join()
+//####################################################################################
+// Here the parseInt converts a string x into a number base 10 the sign is handled
+// by the Math.sign() function
+//####################################################################################
+const reverseBits = (x)=> {
+    if( x<1534236469 && x >= -2147483412){
+        return parseInt(x.toString(10).split("").reverse().join(""),10) * Math.sign(x)
+        }else{return 0}
 }
 
-console.log(mirror_bits(1101000))
+
+
 
 const pageTitle = document.querySelector(".box") // First element with the h2 tag
 
 console.log(pageTitle)
+console.log(reverseBits(
+    -1563847412))
 
+
+// Palindrome (Easy)
+
+//####################################################################################
+// Here the reversal is done same as before with the split/reverse/join function of the
+// string and array function
+//####################################################################################
+
+var isPalindrome = function(x) {
+  
+    const reversed = x.toString(10).split("").reverse().join("")
+    console.log(reversed)
+    return reversed === x.toString(10)
+ 
+}
+
+console.log(isPalindrome(1111))

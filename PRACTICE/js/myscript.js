@@ -15,6 +15,18 @@ var twoSum = (nums,target) => {
 
 }
 
+// Print an Array with Elems on the Same Line
+
+
+var printerArr = (str) => {
+    let stringToPrint=str.join("")
+
+    console.log(stringToPrint)
+}
+
+sample_str = ["Hello ", "Asis ", " you", " did"," well."]
+printerArr(sample_str)
+
 
 var twoSum2 = (numArray,target) =>{
     const numObject = {}
@@ -180,4 +192,112 @@ var romanToInteger = (s) => {
 
 console.log(romanToInteger("MCMXCVI"))
 
+// Add two numbers, Given two linked list, add two numbers
+
+var addTwoNums = function(l1,l2){
+
+    let dummyHead = new ListNode[0];
+    let p1 = l1;
+    let p2 = l2;
+
+    let current = dummyHead;
+
+    let carry = 0;
+
+    while(p1 !== null || p2 !== null){
+        let x = (p1 !==null) ? p1.val: 0;
+        let y = (p2 !==null) ? p2.val: 0;
+
+        let sum = x + y + carry;
+
+        carry = Math.floor(sum /10);
+
+        current.next = new ListNode(sum % 10);
+        current= current.next;
+
+        if (p1 !==null) {
+            p1 = p1.next;
+        }
+
+        if (p2 !==null) {
+            p2 = p2.next;
+        }
+
+
+    }
+
+    if(carry>0){
+        current.next = new ListNode(1);
+    }
+
+    return dummyHead.next;
+
+}
+
+// Longest Substring without given characters
+
+var lengthOfLongest = (s) => {
+    let set = new Set
+    let left = 0;
+    let right = 0;
+    let max_substring = 0;
+
+    while (right < s.length){
+        if(!set.has(s.charAt(right))){
+
+            set.add(s.charAt(right));
+
+            max_substring = Math.max(max_substring,set.size)
+            right++;
+
+
+        }else {
+            set.delete(charAt(left))
+            left++;
+        }
+
+    }
+    return max_substring
+
+}
+
+
+// This implements the sliding window technique 
+
+
+// #14 Longest Common Prefix
+
+
+var longestCommonPre = function(s){
+    let longest ='';
+
+    // First check if strs is not zero
+    if(s.length === 0 ) {
+        return longest
+    }
+
+    let compare_word = s[0];
+    let compare_idx = 0;
+    
+    for(let compare_letter of compare_word){
+        for(let i = 1; i<s.length;i++) {
+            let curr_word = s[i]
+            let curr_letter = curr_word.charAt(compare_idx)
+
+            if(compare_letter !== curr_letter || compare_idx > curr_word.length) {
+                return longest;
+            } 
+        }
+        comparisonIndex++;
+        longest += compare_letter
+    }
+
+    return longest;
+}
+
+
+// Valid Palindrom
+
+
+// Algorithms 
 

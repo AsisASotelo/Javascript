@@ -1,0 +1,2011 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 24 24 571 818
+%%Title: Enscript Output
+%%For: Asis A Sotelo
+%%Creator: GNU Enscript 1.6.6
+%%CreationDate: Sun May 31 18:58:01 2020
+%%Orientation: Landscape
+%%Pages: (atend)
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: (atend)
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset Enscript-Prolog 1.6 6
+%
+% Procedures.
+%
+
+/_S {	% save current state
+  /_s save def
+} def
+/_R {	% restore from saved state
+  _s restore
+} def
+
+/S {	% showpage protecting gstate
+  gsave
+  showpage
+  grestore
+} bind def
+
+/MF {	% fontname newfontname -> -	make a new encoded font
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  % insert only valid encoding vectors
+  encoding_vector length 256 eq {
+    newfont /Encoding encoding_vector put
+  } if
+
+  newfontname newfont definefont pop
+} def
+
+/MF_PS { % fontname newfontname -> -	make a new font preserving its enc
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  newfontname newfont definefont pop
+} def
+
+/SF { % fontname width height -> -	set a new font
+  /height exch def
+  /width exch def
+
+  findfont
+  [width 0 0 height 0 0] makefont setfont
+} def
+
+/SUF { % fontname width height -> -	set a new user font
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF
+  /F-gs-user-font width height SF
+} def
+
+/SUF_PS { % fontname width height -> -	set a new user font preserving its enc
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF_PS
+  /F-gs-user-font width height SF
+} def
+
+/M {moveto} bind def
+/s {show} bind def
+
+/Box {	% x y w h -> -			define box path
+  /d_h exch def /d_w exch def /d_y exch def /d_x exch def
+  d_x d_y  moveto
+  d_w 0 rlineto
+  0 d_h rlineto
+  d_w neg 0 rlineto
+  closepath
+} def
+
+/bgs {	% x y height blskip gray str -> -	show string with bg color
+  /str exch def
+  /gray exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    gray setgray
+    fill
+  grestore
+  x y M str s
+} def
+
+/bgcs { % x y height blskip red green blue str -> -  show string with bg color
+  /str exch def
+  /blue exch def
+  /green exch def
+  /red exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    red green blue setrgbcolor
+    fill
+  grestore
+  x y M str s
+} def
+
+% Highlight bars.
+/highlight_bars {	% nlines lineheight output_y_margin gray -> -
+  gsave
+    setgray
+    /ymarg exch def
+    /lineheight exch def
+    /nlines exch def
+
+    % This 2 is just a magic number to sync highlight lines to text.
+    0 d_header_y ymarg sub 2 sub translate
+
+    /cw d_output_w cols div def
+    /nrows d_output_h ymarg 2 mul sub lineheight div cvi def
+
+    % for each column
+    0 1 cols 1 sub {
+      cw mul /xp exch def
+
+      % for each rows
+      0 1 nrows 1 sub {
+        /rn exch def
+        rn lineheight mul neg /yp exch def
+        rn nlines idiv 2 mod 0 eq {
+	  % Draw highlight bar.  4 is just a magic indentation.
+	  xp 4 add yp cw 8 sub lineheight neg Box fill
+	} if
+      } for
+    } for
+
+  grestore
+} def
+
+% Line highlight bar.
+/line_highlight {	% x y width height gray -> -
+  gsave
+    /gray exch def
+    Box gray setgray fill
+  grestore
+} def
+
+% Column separator lines.
+/column_lines {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h translate
+    /cw d_output_w cols div def
+    1 1 cols 1 sub {
+      cw mul 0 moveto
+      0 d_output_h rlineto stroke
+    } for
+  grestore
+} def
+
+% Column borders.
+/column_borders {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h moveto
+    0 d_output_h rlineto
+    d_output_w 0 rlineto
+    0 d_output_h neg rlineto
+    closepath stroke
+  grestore
+} def
+
+% Do the actual underlay drawing
+/draw_underlay {
+  ul_style 0 eq {
+    ul_str true charpath stroke
+  } {
+    ul_str show
+  } ifelse
+} def
+
+% Underlay
+/underlay {	% - -> -
+  gsave
+    0 d_page_h translate
+    d_page_h neg d_page_w atan rotate
+
+    ul_gray setgray
+    ul_font setfont
+    /dw d_page_h dup mul d_page_w dup mul add sqrt def
+    ul_str stringwidth pop dw exch sub 2 div ul_h_ptsize -2 div moveto
+    draw_underlay
+  grestore
+} def
+
+/user_underlay {	% - -> -
+  gsave
+    ul_x ul_y translate
+    ul_angle rotate
+    ul_gray setgray
+    ul_font setfont
+    0 0 ul_h_ptsize 2 div sub moveto
+    draw_underlay
+  grestore
+} def
+
+% Page prefeed
+/page_prefeed {		% bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} def
+
+% Wrapped line markers
+/wrapped_line_mark {	% x y charwith charheight type -> -
+  /type exch def
+  /h exch def
+  /w exch def
+  /y exch def
+  /x exch def
+
+  type 2 eq {
+    % Black boxes (like TeX does)
+    gsave
+      0 setlinewidth
+      x w 4 div add y M
+      0 h rlineto w 2 div 0 rlineto 0 h neg rlineto
+      closepath fill
+    grestore
+  } {
+    type 3 eq {
+      % Small arrows
+      gsave
+        .2 setlinewidth
+        x w 2 div add y h 2 div add M
+        w 4 div 0 rlineto
+        x w 4 div add y lineto stroke
+
+        x w 4 div add w 8 div add y h 4 div add M
+        x w 4 div add y lineto
+	w 4 div h 8 div rlineto stroke
+      grestore
+    } {
+      % do nothing
+    } ifelse
+  } ifelse
+} def
+
+% EPSF import.
+
+/BeginEPSF {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack
+  userdict begin
+  /showpage { } def
+  0 setgray 0 setlinecap
+  1 setlinewidth 0 setlinejoin
+  10 setmiterlimit [ ] 0 setdash newpath
+  /languagelevel where {
+    pop languagelevel
+    1 ne {
+      false setstrokeadjust false setoverprint
+    } if
+  } if
+} bind def
+
+/EndEPSF {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+%%EndResource
+%%BeginResource: procset Enscript-Encoding-88591 1.6 6
+/encoding_vector [
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclam       	/quotedbl     	/numbersign   	
+/dollar       	/percent      	/ampersand    	/quoteright   	
+/parenleft    	/parenright   	/asterisk     	/plus         	
+/comma        	/hyphen       	/period       	/slash        	
+/zero         	/one          	/two          	/three        	
+/four         	/five         	/six          	/seven        	
+/eight        	/nine         	/colon        	/semicolon    	
+/less         	/equal        	/greater      	/question     	
+/at           	/A            	/B            	/C            	
+/D            	/E            	/F            	/G            	
+/H            	/I            	/J            	/K            	
+/L            	/M            	/N            	/O            	
+/P            	/Q            	/R            	/S            	
+/T            	/U            	/V            	/W            	
+/X            	/Y            	/Z            	/bracketleft  	
+/backslash    	/bracketright 	/asciicircum  	/underscore   	
+/quoteleft    	/a            	/b            	/c            	
+/d            	/e            	/f            	/g            	
+/h            	/i            	/j            	/k            	
+/l            	/m            	/n            	/o            	
+/p            	/q            	/r            	/s            	
+/t            	/u            	/v            	/w            	
+/x            	/y            	/z            	/braceleft    	
+/bar          	/braceright   	/tilde        	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclamdown   	/cent         	/sterling     	
+/currency     	/yen          	/brokenbar    	/section      	
+/dieresis     	/copyright    	/ordfeminine  	/guillemotleft	
+/logicalnot   	/hyphen       	/registered   	/macron       	
+/degree       	/plusminus    	/twosuperior  	/threesuperior	
+/acute        	/mu           	/paragraph    	/bullet       	
+/cedilla      	/onesuperior  	/ordmasculine 	/guillemotright	
+/onequarter   	/onehalf      	/threequarters	/questiondown 	
+/Agrave       	/Aacute       	/Acircumflex  	/Atilde       	
+/Adieresis    	/Aring        	/AE           	/Ccedilla     	
+/Egrave       	/Eacute       	/Ecircumflex  	/Edieresis    	
+/Igrave       	/Iacute       	/Icircumflex  	/Idieresis    	
+/Eth          	/Ntilde       	/Ograve       	/Oacute       	
+/Ocircumflex  	/Otilde       	/Odieresis    	/multiply     	
+/Oslash       	/Ugrave       	/Uacute       	/Ucircumflex  	
+/Udieresis    	/Yacute       	/Thorn        	/germandbls   	
+/agrave       	/aacute       	/acircumflex  	/atilde       	
+/adieresis    	/aring        	/ae           	/ccedilla     	
+/egrave       	/eacute       	/ecircumflex  	/edieresis    	
+/igrave       	/iacute       	/icircumflex  	/idieresis    	
+/eth          	/ntilde       	/ograve       	/oacute       	
+/ocircumflex  	/otilde       	/odieresis    	/divide       	
+/oslash       	/ugrave       	/uacute       	/ucircumflex  	
+/udieresis    	/yacute       	/thorn        	/ydieresis    	
+] def
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Courier
+/HFpt_w 10 def
+/HFpt_h 10 def
+/Courier-Bold /HF-gs-font MF
+/HF /HF-gs-font findfont [HFpt_w 0 0 HFpt_h 0 0] makefont def
+/Courier /F-gs-font MF
+/F-gs-font 7 7 SF
+/#copies 1 def
+% Pagedevice definitions:
+gs_languagelevel 1 gt {
+  <<
+    /PageSize [595 842] 
+  >> setpagedevice
+} if
+%%BeginResource: procset Enscript-Header-enscript 1.6 6
+%%IncludeResource: font Times-Bold
+%%IncludeResource: font Times-Roman
+
+% Fonts.
+/Times-Bold /HeaderFont-Bold MF
+/HeaderDateF /HeaderFont-Bold findfont 12 scalefont def
+
+/Times-Roman /HeaderFont-Times MF
+/HeaderHDRF /HeaderFont-Times findfont 14 scalefont def
+
+/HeaderPageNumF /Helvetica-Bold findfont 28.8 scalefont def
+
+/do_header {	% print enscript header
+  gsave
+    d_header_x d_header_y translate
+
+    % light bar
+    0 0 d_header_w d_header_h 2 div Box
+    .95 setgray fill
+
+    % dark gray boxes
+    /dbw d_header_h 2 mul def	% dark box width
+    /dbc .7 def			% dark box color
+
+    % left dark box.
+    0 0 dbw d_header_h Box
+    dbc setgray fill
+
+    0 setgray 
+    HeaderDateF setfont
+    moddatestr dup stringwidth pop dbw exch sub 2 div 
+    d_header_h 2 div 2 add moveto show
+    modtimestr dup stringwidth pop dbw exch sub 2 div 
+    d_header_h 5 div moveto show
+
+    % right dark box
+    d_header_w dbw sub 0 dbw d_header_h Box
+    dbc setgray fill
+
+    HeaderPageNumF setfont
+    1 setgray
+    pagenumstr dup
+    stringwidth pop dbw exch sub 2 div d_header_w dbw sub add
+    d_header_h .2 mul moveto show
+
+    % filename
+    0 setgray 
+    HeaderHDRF setfont
+    d_header_w fname stringwidth pop sub 2 div d_header_h 8 div moveto
+    fname show
+
+    % user supplied header string.
+    user_header_p {
+      /h d_header_h 8 div 5 mul def
+
+      % Implement strict enscript compatibility.
+      user_header_center_str () eq user_header_right_str () eq and {
+        d_header_w user_header_left_str stringwidth pop sub 2 div 
+        h moveto user_header_left_str show
+      } {
+        dbw 5 add h moveto user_header_left_str show
+
+        d_header_w user_header_center_str stringwidth pop sub 2 div 
+        h moveto user_header_center_str show
+
+	d_header_w dbw sub 5 sub user_header_right_str stringwidth pop
+	sub h moveto user_header_right_str show
+      } ifelse
+    } if
+
+  grestore
+} def
+%%EndResource
+/d_page_w 794 def
+/d_page_h 547 def
+/d_header_x 0 def
+/d_header_y 511 def
+/d_header_w 794 def
+/d_header_h 36 def
+/d_footer_x 0 def
+/d_footer_y 0 def
+/d_footer_w 794 def
+/d_footer_h 0 def
+/d_output_w 794 def
+/d_output_h 511 def
+/cols 3 def
+%%EndSetup
+%%Page: (1) 1
+%%BeginPageSetup
+_S
+90 rotate
+24 -571 translate
+/pagenum 1 def
+/fname (myscript.js) def
+/fdir (.) def
+/ftail (myscript.js) def
+% User defined strings:
+/pagenumstr (1) def
+/moddatestr (05/31/20) def
+/modtimestr (15:32:10) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+column_lines
+do_header
+22.8 501 M (1:) s
+/Courier-Oblique 7 7 SUF
+35.4 501 M
+(//TWO SUM) s
+/F-gs-font 7 7 SF
+22.8 493 M (2:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Oblique 7 7 SUF
+35.4 493 M
+(// Given an array of integers, return indices of the ) s
+/F-gs-font 7 7 SF
+22.8 485 M (3:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Oblique 7 7 SUF
+35.4 485 M
+(// target) s
+/F-gs-font 7 7 SF
+22.8 477 M (4:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+22.8 469 M (5:) s
+/Courier-Bold 7 7 SUF
+35.4 469 M
+(var) s
+/F-gs-font 7 7 SF
+48 469 M
+( twoSum = \(nums,target\) => {) s
+22.8 461 M (6:) s
+22.8 453 M (7:) s
+35.4 453 M
+(    ) s
+/Courier-Bold 7 7 SUF
+52.2 453 M
+(for) s
+/F-gs-font 7 7 SF
+64.8 453 M
+(\(let i ) s
+/Courier-Bold 7 7 SUF
+94.2 453 M
+(in) s
+/F-gs-font 7 7 SF
+102.6 453 M
+( nums\) {) s
+22.8 445 M (8:) s
+35.4 445 M
+(        ) s
+/Courier-Bold 7 7 SUF
+69 445 M
+(for) s
+/F-gs-font 7 7 SF
+81.6 445 M
+(\(let j ) s
+/Courier-Bold 7 7 SUF
+111 445 M
+(in) s
+/F-gs-font 7 7 SF
+119.4 445 M
+( nums\){) s
+22.8 437 M (9:) s
+35.4 437 M
+(            ) s
+/Courier-Bold 7 7 SUF
+85.8 437 M
+(if) s
+/F-gs-font 7 7 SF
+94.2 437 M
+(\(\(nums[i] + nums[j] == target\) && j !==) s
+18.6 429 M (10:) s
+35.4 429 M
+(                ) s
+/Courier-Bold 7 7 SUF
+102.6 429 M
+(return) s
+/F-gs-font 7 7 SF
+127.8 429 M
+( [i,j]) s
+18.6 421 M (11:) s
+35.4 421 M
+(            }) s
+18.6 413 M (12:) s
+35.4 413 M
+(        }) s
+18.6 405 M (13:) s
+35.4 405 M
+(    }) s
+18.6 397 M (14:) s
+18.6 389 M (15:) s
+18.6 381 M (16:) s
+35.4 381 M
+(}) s
+18.6 373 M (17:) s
+18.6 365 M (18:) s
+/Courier-Oblique 7 7 SUF
+35.4 365 M
+(// Print an Array with Elems on the Same Line) s
+/F-gs-font 7 7 SF
+18.6 357 M (19:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+18.6 349 M (20:) s
+18.6 341 M (21:) s
+/Courier-Bold 7 7 SUF
+35.4 341 M
+(var) s
+/F-gs-font 7 7 SF
+48 341 M
+( printerArr = \(str\) => {) s
+18.6 333 M (22:) s
+35.4 333 M
+(    let stringToPrint=str.join\() s
+/Courier-Bold 7 7 SUF
+165.6 333 M
+("") s
+/F-gs-font 7 7 SF
+174 333 M
+(\)) s
+18.6 325 M (23:) s
+18.6 317 M (24:) s
+35.4 317 M
+(    console.log\(stringToPrint\)) s
+18.6 309 M (25:) s
+35.4 309 M
+(}) s
+18.6 301 M (26:) s
+18.6 293 M (27:) s
+35.4 293 M
+(sample_str = [) s
+/Courier-Bold 7 7 SUF
+94.2 293 M
+("Hello ") s
+/F-gs-font 7 7 SF
+127.8 293 M
+(, ) s
+/Courier-Bold 7 7 SUF
+136.2 293 M
+("Asis ") s
+/F-gs-font 7 7 SF
+165.6 293 M
+(, ) s
+/Courier-Bold 7 7 SUF
+174 293 M
+(" you") s
+/F-gs-font 7 7 SF
+199.2 293 M
+(, ) s
+/Courier-Bold 7 7 SUF
+207.6 293 M
+(" did") s
+/F-gs-font 7 7 SF
+232.8 293 M
+(,) s
+/Courier-Bold 7 7 SUF
+237 293 M
+(" wel) s
+/F-gs-font 7 7 SF
+18.6 285 M (28:) s
+/Courier-Bold 7 7 SUF
+35.4 285 M
+(printerArr\(sample_str\)) s
+/F-gs-font 7 7 SF
+18.6 277 M (29:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+18.6 269 M (30:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+18.6 261 M (31:) s
+/Courier-Bold 7 7 SUF
+/Courier-Bold 7 7 SUF
+35.4 261 M
+(var) s
+/F-gs-font 7 7 SF
+48 261 M
+( twoSum2 = \(numArray,target\) =>{) s
+18.6 253 M (32:) s
+35.4 253 M
+(    ) s
+/Courier-Bold 7 7 SUF
+52.2 253 M
+(const) s
+/F-gs-font 7 7 SF
+73.2 253 M
+( numObject = {}) s
+18.6 245 M (33:) s
+18.6 237 M (34:) s
+35.4 237 M
+(    ) s
+/Courier-Bold 7 7 SUF
+52.2 237 M
+(for) s
+/F-gs-font 7 7 SF
+64.8 237 M
+(\(let num ) s
+/Courier-Bold 7 7 SUF
+102.6 237 M
+(in) s
+/F-gs-font 7 7 SF
+111 237 M
+( numArray\) {) s
+18.6 229 M (35:) s
+35.4 229 M
+(        ) s
+/Courier-Bold 7 7 SUF
+69 229 M
+(const) s
+/F-gs-font 7 7 SF
+90 229 M
+( otherNum = target - numArray[num]) s
+18.6 221 M (36:) s
+18.6 213 M (37:) s
+35.4 213 M
+(        ) s
+/Courier-Oblique 7 7 SUF
+69 213 M
+(//Could also use the numObject.has\(\)) s
+/F-gs-font 7 7 SF
+18.6 205 M (38:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+35.4 205 M
+(        ) s
+/Courier-Oblique 7 7 SUF
+69 205 M
+(//To get the value of the indexed value use t) s
+/F-gs-font 7 7 SF
+18.6 197 M (39:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+18.6 189 M (40:) s
+35.4 189 M
+(        ) s
+/Courier-Bold 7 7 SUF
+69 189 M
+(if) s
+/F-gs-font 7 7 SF
+77.4 189 M
+(\(otherNum ) s
+/Courier-Bold 7 7 SUF
+119.4 189 M
+(in) s
+/F-gs-font 7 7 SF
+127.8 189 M
+( numObject\){) s
+18.6 181 M (41:) s
+35.4 181 M
+(            ) s
+/Courier-Bold 7 7 SUF
+85.8 181 M
+(return) s
+/F-gs-font 7 7 SF
+111 181 M
+([numObject[num], otherNum]) s
+18.6 173 M (42:) s
+35.4 173 M
+(        }) s
+18.6 165 M (43:) s
+35.4 165 M
+(        numObject[numArray[num]] = num) s
+18.6 157 M (44:) s
+35.4 157 M
+(    }) s
+18.6 149 M (45:) s
+35.4 149 M
+(}) s
+18.6 141 M (46:) s
+18.6 133 M (47:) s
+18.6 125 M (48:) s
+18.6 117 M (49:) s
+35.4 117 M
+(array = [1,2,7,11,15]) s
+18.6 109 M (50:) s
+35.4 109 M
+(twoSum\(array,9\)) s
+18.6 101 M (51:) s
+35.4 101 M
+(console.log\(twoSum2\(array,9\)\)) s
+18.6 93 M (52:) s
+18.6 85 M (53:) s
+18.6 77 M (54:) s
+/Courier-Oblique 7 7 SUF
+35.4 77 M
+(// Given a signed integer reverse digits of an intege) s
+/F-gs-font 7 7 SF
+18.6 69 M (55:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+18.6 61 M (56:) s
+/Courier-Bold 7 7 SUF
+35.4 61 M
+(var) s
+/F-gs-font 7 7 SF
+48 61 M
+( reverse = \(x\) => {) s
+18.6 53 M (57:) s
+35.4 53 M
+(    newArray= []) s
+18.6 45 M (58:) s
+35.4 45 M
+(    ) s
+/Courier-Bold 7 7 SUF
+52.2 45 M
+(for) s
+/F-gs-font 7 7 SF
+64.8 45 M
+(\(let i=x.length-1;i >=0;i--\){) s
+18.6 37 M (59:) s
+35.4 37 M
+(        newArray.push\(x[i]\)) s
+18.6 29 M (60:) s
+35.4 29 M
+(    }) s
+18.6 21 M (61:) s
+35.4 21 M
+(    ) s
+/Courier-Bold 7 7 SUF
+52.2 21 M
+(return) s
+/F-gs-font 7 7 SF
+77.4 21 M
+( newArray) s
+18.6 13 M (62:) s
+35.4 13 M
+(}) s
+18.6 5 M (63:) s
+283.267 501 M (64:) s
+300.067 501 M
+(console.log\(reverse\(array\)\)) s
+283.267 493 M (65:) s
+283.267 485 M (66:) s
+/Courier-Bold 7 7 SUF
+300.067 485 M
+(var) s
+/F-gs-font 7 7 SF
+312.667 485 M
+( fizzbuzz = \(n\) => {) s
+283.267 477 M (67:) s
+300.067 477 M
+(    let arr = []) s
+283.267 469 M (68:) s
+283.267 461 M (69:) s
+283.267 453 M (70:) s
+300.067 453 M
+(    ) s
+/Courier-Bold 7 7 SUF
+316.867 453 M
+(for) s
+/F-gs-font 7 7 SF
+329.467 453 M
+(\(let i = 1; i <= n; i++\){) s
+283.267 445 M (71:) s
+300.067 445 M
+(        ) s
+/Courier-Bold 7 7 SUF
+333.667 445 M
+(if) s
+/F-gs-font 7 7 SF
+342.067 445 M
+(\( i % 15===0\){) s
+283.267 437 M (72:) s
+300.067 437 M
+(            arr.push\() s
+/Courier-Bold 7 7 SUF
+388.267 437 M
+("Fizzbuzz") s
+/F-gs-font 7 7 SF
+430.267 437 M
+(\)) s
+283.267 429 M (73:) s
+300.067 429 M
+(        }) s
+/Courier-Bold 7 7 SUF
+337.867 429 M
+(else) s
+/F-gs-font 7 7 SF
+354.667 429 M
+( ) s
+/Courier-Bold 7 7 SUF
+358.867 429 M
+(if) s
+/F-gs-font 7 7 SF
+367.267 429 M
+(\(i % 5=== 0\){) s
+283.267 421 M (74:) s
+283.267 413 M (75:) s
+300.067 413 M
+(            arr.push\() s
+/Courier-Bold 7 7 SUF
+388.267 413 M
+("buzz") s
+/F-gs-font 7 7 SF
+413.467 413 M
+(\)) s
+283.267 405 M (76:) s
+283.267 397 M (77:) s
+300.067 397 M
+(        }) s
+/Courier-Bold 7 7 SUF
+337.867 397 M
+(else) s
+/F-gs-font 7 7 SF
+354.667 397 M
+( ) s
+/Courier-Bold 7 7 SUF
+358.867 397 M
+(if) s
+/F-gs-font 7 7 SF
+367.267 397 M
+( \(i % 3 ===0\){) s
+283.267 389 M (78:) s
+300.067 389 M
+(            arr.push\() s
+/Courier-Bold 7 7 SUF
+388.267 389 M
+("Fizz") s
+/F-gs-font 7 7 SF
+413.467 389 M
+(\)) s
+283.267 381 M (79:) s
+300.067 381 M
+(        }) s
+/Courier-Bold 7 7 SUF
+337.867 381 M
+(else) s
+/F-gs-font 7 7 SF
+354.667 381 M
+({) s
+283.267 373 M (80:) s
+300.067 373 M
+(            arr.push\(i.toString\(\)\)) s
+283.267 365 M (81:) s
+300.067 365 M
+(        }) s
+283.267 357 M (82:) s
+283.267 349 M (83:) s
+300.067 349 M
+(    }) s
+283.267 341 M (84:) s
+283.267 333 M (85:) s
+300.067 333 M
+(    arr.forEach\(x => {) s
+283.267 325 M (86:) s
+300.067 325 M
+(        console.log\(x\)) s
+283.267 317 M (87:) s
+300.067 317 M
+(    }\)) s
+283.267 309 M (88:) s
+283.267 301 M (89:) s
+300.067 301 M
+(}) s
+283.267 293 M (90:) s
+283.267 285 M (91:) s
+300.067 285 M
+(fizzbuzz\(20\)) s
+283.267 277 M (92:) s
+283.267 269 M (93:) s
+/Courier-Oblique 7 7 SUF
+300.067 269 M
+(//Reverse Bits) s
+/F-gs-font 7 7 SF
+283.267 261 M (94:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+283.267 253 M (95:) s
+/Courier-Oblique 7 7 SUF
+300.067 253 M
+(//###################################################) s
+/F-gs-font 7 7 SF
+283.267 245 M (96:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Oblique 7 7 SUF
+300.067 245 M
+(// Here the parseInt converts a string x into a numbe) s
+/F-gs-font 7 7 SF
+283.267 237 M (97:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Oblique 7 7 SUF
+300.067 237 M
+(// by the Math.sign\(\) function) s
+/F-gs-font 7 7 SF
+283.267 229 M (98:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Oblique 7 7 SUF
+300.067 229 M
+(//###################################################) s
+/F-gs-font 7 7 SF
+283.267 221 M (99:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Bold 7 7 SUF
+300.067 221 M
+(const) s
+/F-gs-font 7 7 SF
+321.067 221 M
+( reverseBits = \(x\)=> {) s
+279.067 213 M (100:) s
+300.067 213 M
+(    ) s
+/Courier-Bold 7 7 SUF
+316.867 213 M
+(if) s
+/F-gs-font 7 7 SF
+325.267 213 M
+(\( x<1534236469 && x >= -2147483412\){) s
+279.067 205 M (101:) s
+300.067 205 M
+(        ) s
+/Courier-Bold 7 7 SUF
+333.667 205 M
+(return) s
+/F-gs-font 7 7 SF
+358.867 205 M
+( ) s
+/Courier-Bold 7 7 SUF
+363.067 205 M
+(parseInt) s
+/F-gs-font 7 7 SF
+396.667 205 M
+(\(x.toString\(10\).split\() s
+/Courier-Bold 7 7 SUF
+489.067 205 M
+("") s
+/F-gs-font 7 7 SF
+497.467 205 M
+(\).reve) s
+279.067 197 M (102:) s
+300.067 197 M
+(        }) s
+/Courier-Bold 7 7 SUF
+337.867 197 M
+(else) s
+/F-gs-font 7 7 SF
+354.667 197 M
+({) s
+/Courier-Bold 7 7 SUF
+358.867 197 M
+(return) s
+/F-gs-font 7 7 SF
+384.067 197 M
+( 0}) s
+279.067 189 M (103:) s
+300.067 189 M
+(}) s
+279.067 181 M (104:) s
+279.067 173 M (105:) s
+279.067 165 M (106:) s
+279.067 157 M (107:) s
+279.067 149 M (108:) s
+/Courier-Bold 7 7 SUF
+300.067 149 M
+(const) s
+/F-gs-font 7 7 SF
+321.067 149 M
+( pageTitle = document.querySelector\() s
+/Courier-Bold 7 7 SUF
+472.267 149 M
+(".box") s
+/F-gs-font 7 7 SF
+497.467 149 M
+(\) ) s
+/Courier-Oblique 7 7 SUF
+505.867 149 M
+(// F) s
+/F-gs-font 7 7 SF
+279.067 141 M (109:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+279.067 133 M (110:) s
+300.067 133 M
+(console.log\(pageTitle\)) s
+279.067 125 M (111:) s
+300.067 125 M
+(console.log\(reverseBits\() s
+279.067 117 M (112:) s
+300.067 117 M
+(    -1563847412\)\)) s
+279.067 109 M (113:) s
+279.067 101 M (114:) s
+279.067 93 M (115:) s
+/Courier-Oblique 7 7 SUF
+300.067 93 M
+(// Palindrome \(Easy\)) s
+/F-gs-font 7 7 SF
+279.067 85 M (116:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+279.067 77 M (117:) s
+/Courier-Oblique 7 7 SUF
+300.067 77 M
+(//###################################################) s
+/F-gs-font 7 7 SF
+279.067 69 M (118:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Oblique 7 7 SUF
+300.067 69 M
+(// Here the reversal is done same as before with the ) s
+/F-gs-font 7 7 SF
+279.067 61 M (119:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Oblique 7 7 SUF
+300.067 61 M
+(// string and array function) s
+/F-gs-font 7 7 SF
+279.067 53 M (120:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+/Courier-Oblique 7 7 SUF
+300.067 53 M
+(//###################################################) s
+/F-gs-font 7 7 SF
+279.067 45 M (121:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+279.067 37 M (122:) s
+/Courier-Bold 7 7 SUF
+300.067 37 M
+(var) s
+/F-gs-font 7 7 SF
+312.667 37 M
+( isPalindrome = ) s
+/Courier-Bold 7 7 SUF
+379.867 37 M
+(function) s
+/F-gs-font 7 7 SF
+413.467 37 M
+(\(x\) {) s
+279.067 29 M (123:) s
+300.067 29 M
+(  ) s
+279.067 21 M (124:) s
+300.067 21 M
+(    ) s
+/Courier-Bold 7 7 SUF
+316.867 21 M
+(const) s
+/F-gs-font 7 7 SF
+337.867 21 M
+( reversed = x.toString\(10\).split\() s
+/Courier-Bold 7 7 SUF
+476.467 21 M
+("") s
+/F-gs-font 7 7 SF
+484.867 21 M
+(\).reverse) s
+279.067 13 M (125:) s
+300.067 13 M
+(    console.log\(reversed\)) s
+279.067 5 M (126:) s
+300.067 5 M
+(    ) s
+/Courier-Bold 7 7 SUF
+316.867 5 M
+(return) s
+/F-gs-font 7 7 SF
+342.067 5 M
+( reversed === x.toString\(10\)) s
+543.733 501 M (127:) s
+564.733 501 M
+( ) s
+543.733 493 M (128:) s
+564.733 493 M
+(}) s
+543.733 485 M (129:) s
+543.733 477 M (130:) s
+/Courier-Bold 7 7 SUF
+564.733 477 M
+(var) s
+/F-gs-font 7 7 SF
+577.333 477 M
+( isPalindromeV2 = ) s
+/Courier-Bold 7 7 SUF
+652.933 477 M
+(function) s
+/F-gs-font 7 7 SF
+686.533 477 M
+(\(x\){) s
+543.733 469 M (131:) s
+564.733 469 M
+(    ) s
+543.733 461 M (132:) s
+564.733 461 M
+(    x = x.toString\(\).split\() s
+/Courier-Bold 7 7 SUF
+678.133 461 M
+("") s
+/F-gs-font 7 7 SF
+686.533 461 M
+(\)) s
+543.733 453 M (133:) s
+543.733 445 M (134:) s
+564.733 445 M
+(    arr_idx = x.length - 1) s
+543.733 437 M (135:) s
+564.733 437 M
+(    console.log\() s
+/Courier-Bold 7 7 SUF
+631.933 437 M
+("x.length is ") s
+/F-gs-font 7 7 SF
+690.733 437 M
+( + x.length\)) s
+543.733 429 M (136:) s
+564.733 429 M
+(    console.log\() s
+/Courier-Bold 7 7 SUF
+631.933 429 M
+("arr_idx") s
+/F-gs-font 7 7 SF
+669.733 429 M
+( + arr_idx\)) s
+543.733 421 M (137:) s
+564.733 421 M
+(    ) s
+543.733 413 M (138:) s
+564.733 413 M
+(    ) s
+/Courier-Oblique 7 7 SUF
+581.533 413 M
+(// Must implement this for even numbers) s
+/F-gs-font 7 7 SF
+543.733 405 M (139:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 397 M (140:) s
+564.733 397 M
+(    ) s
+/Courier-Bold 7 7 SUF
+581.533 397 M
+(for) s
+/F-gs-font 7 7 SF
+594.133 397 M
+(\(let i = 0; i <=  ) s
+/Courier-Bold 7 7 SUF
+669.733 397 M
+(Math) s
+/F-gs-font 7 7 SF
+686.533 397 M
+(.floor\(x.length) s
+/Courier-Bold 7 7 SUF
+749.533 397 M
+(/2\); i++\)) s
+/F-gs-font 7 7 SF
+543.733 389 M (141:) s
+/Courier-Bold 7 7 SUF
+564.733 389 M
+(        ) s
+/F-gs-font 7 7 SF
+543.733 381 M (142:) s
+/Courier-Bold 7 7 SUF
+564.733 381 M
+(     if\( !\(x[i] === x[arr_idx - i]\) \){) s
+/F-gs-font 7 7 SF
+543.733 373 M (143:) s
+/Courier-Bold 7 7 SUF
+564.733 373 M
+(         return false) s
+/F-gs-font 7 7 SF
+543.733 365 M (144:) s
+/Courier-Bold 7 7 SUF
+564.733 365 M
+(     }) s
+/F-gs-font 7 7 SF
+543.733 357 M (145:) s
+/Courier-Bold 7 7 SUF
+564.733 357 M
+(     ) s
+/F-gs-font 7 7 SF
+543.733 349 M (146:) s
+/Courier-Bold 7 7 SUF
+564.733 349 M
+(           ) s
+/F-gs-font 7 7 SF
+543.733 341 M (147:) s
+/Courier-Bold 7 7 SUF
+564.733 341 M
+(    }) s
+/F-gs-font 7 7 SF
+543.733 333 M (148:) s
+/Courier-Bold 7 7 SUF
+564.733 333 M
+(    return true) s
+/F-gs-font 7 7 SF
+543.733 325 M (149:) s
+/Courier-Bold 7 7 SUF
+564.733 325 M
+(}) s
+/F-gs-font 7 7 SF
+543.733 317 M (150:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 309 M (151:) s
+/Courier-Bold 7 7 SUF
+564.733 309 M
+(console.log\(isPalindromeV2\(1111\)\)) s
+/F-gs-font 7 7 SF
+543.733 301 M (152:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 293 M (153:) s
+/Courier-Bold 7 7 SUF
+564.733 293 M
+(/) s
+/F-gs-font 7 7 SF
+/Courier-Bold 7 7 SUF
+568.933 293 M
+(/ Roman to Integer) s
+/F-gs-font 7 7 SF
+543.733 285 M (154:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 277 M (155:) s
+/Courier-Bold 7 7 SUF
+564.733 277 M
+(var romanToInteger = \(s\) => {) s
+/F-gs-font 7 7 SF
+543.733 269 M (156:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 261 M (157:) s
+/Courier-Bold 7 7 SUF
+564.733 261 M
+(    let romanToInt = {) s
+/F-gs-font 7 7 SF
+543.733 253 M (158:) s
+/Courier-Bold 7 7 SUF
+564.733 253 M
+(        I:1,) s
+/F-gs-font 7 7 SF
+543.733 245 M (159:) s
+/Courier-Bold 7 7 SUF
+564.733 245 M
+(        V:5,) s
+/F-gs-font 7 7 SF
+543.733 237 M (160:) s
+/Courier-Bold 7 7 SUF
+564.733 237 M
+(        X:10,) s
+/F-gs-font 7 7 SF
+543.733 229 M (161:) s
+/Courier-Bold 7 7 SUF
+564.733 229 M
+(        L:50,) s
+/F-gs-font 7 7 SF
+543.733 221 M (162:) s
+/Courier-Bold 7 7 SUF
+564.733 221 M
+(        C:100,) s
+/F-gs-font 7 7 SF
+543.733 213 M (163:) s
+/Courier-Bold 7 7 SUF
+564.733 213 M
+(        D:500,) s
+/F-gs-font 7 7 SF
+543.733 205 M (164:) s
+/Courier-Bold 7 7 SUF
+564.733 205 M
+(        M:1000,) s
+/F-gs-font 7 7 SF
+543.733 197 M (165:) s
+/Courier-Bold 7 7 SUF
+564.733 197 M
+(    ) s
+/F-gs-font 7 7 SF
+543.733 189 M (166:) s
+/Courier-Bold 7 7 SUF
+564.733 189 M
+(    };) s
+/F-gs-font 7 7 SF
+543.733 181 M (167:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 173 M (168:) s
+/Courier-Bold 7 7 SUF
+564.733 173 M
+(    let total = 0;) s
+/F-gs-font 7 7 SF
+543.733 165 M (169:) s
+/Courier-Bold 7 7 SUF
+564.733 165 M
+(    for\(let i = 0; i<s.length;i++\){) s
+/F-gs-font 7 7 SF
+543.733 157 M (170:) s
+/Courier-Bold 7 7 SUF
+564.733 157 M
+(        let curr = romanToInt[s.charAt\(i\)];) s
+/F-gs-font 7 7 SF
+543.733 149 M (171:) s
+/Courier-Bold 7 7 SUF
+564.733 149 M
+(        let next = romanToInt[s.charAt\(i+1\)];) s
+/F-gs-font 7 7 SF
+543.733 141 M (172:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 133 M (173:) s
+/Courier-Bold 7 7 SUF
+564.733 133 M
+(        if\(next\){) s
+/F-gs-font 7 7 SF
+543.733 125 M (174:) s
+/Courier-Bold 7 7 SUF
+564.733 125 M
+(            if\(curr >= next\) {) s
+/F-gs-font 7 7 SF
+543.733 117 M (175:) s
+/Courier-Bold 7 7 SUF
+564.733 117 M
+(                total += curr;) s
+/F-gs-font 7 7 SF
+543.733 109 M (176:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 101 M (177:) s
+/Courier-Bold 7 7 SUF
+564.733 101 M
+(            } else {) s
+/F-gs-font 7 7 SF
+543.733 93 M (178:) s
+/Courier-Bold 7 7 SUF
+564.733 93 M
+(                total += \(next - curr\);) s
+/F-gs-font 7 7 SF
+543.733 85 M (179:) s
+/Courier-Bold 7 7 SUF
+564.733 85 M
+(                i++;) s
+/F-gs-font 7 7 SF
+543.733 77 M (180:) s
+/Courier-Bold 7 7 SUF
+564.733 77 M
+(            }) s
+/F-gs-font 7 7 SF
+543.733 69 M (181:) s
+/Courier-Bold 7 7 SUF
+564.733 69 M
+(        ) s
+/F-gs-font 7 7 SF
+543.733 61 M (182:) s
+/Courier-Bold 7 7 SUF
+564.733 61 M
+(        ) s
+/F-gs-font 7 7 SF
+543.733 53 M (183:) s
+/Courier-Bold 7 7 SUF
+564.733 53 M
+(        }else {) s
+/F-gs-font 7 7 SF
+543.733 45 M (184:) s
+/Courier-Bold 7 7 SUF
+564.733 45 M
+(                total += curr;) s
+/F-gs-font 7 7 SF
+543.733 37 M (185:) s
+/Courier-Bold 7 7 SUF
+564.733 37 M
+(            }) s
+/F-gs-font 7 7 SF
+543.733 29 M (186:) s
+/Courier-Bold 7 7 SUF
+564.733 29 M
+(    }) s
+/F-gs-font 7 7 SF
+543.733 21 M (187:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+543.733 13 M (188:) s
+/Courier-Bold 7 7 SUF
+564.733 13 M
+(    return total;) s
+/F-gs-font 7 7 SF
+543.733 5 M (189:) s
+/Courier-Bold 7 7 SUF
+564.733 5 M
+(    ) s
+_R
+S
+%%Page: (2) 2
+%%BeginPageSetup
+_S
+90 rotate
+24 -571 translate
+/pagenum 2 def
+/fname (myscript.js) def
+/fdir (.) def
+/ftail (myscript.js) def
+/Courier-Bold 7 7 SUF
+% User defined strings:
+/pagenumstr (2) def
+/moddatestr (05/31/20) def
+/modtimestr (15:32:10) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+column_lines
+do_header
+/F-gs-font 7 7 SF
+14.4 501 M (190:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 493 M (191:) s
+/Courier-Bold 7 7 SUF
+35.4 493 M
+(}) s
+/F-gs-font 7 7 SF
+14.4 485 M (192:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 477 M (193:) s
+/Courier-Bold 7 7 SUF
+35.4 477 M
+(console.log\(romanToInteger\("MCMXCVI"\)\)) s
+/F-gs-font 7 7 SF
+14.4 469 M (194:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 461 M (195:) s
+/Courier-Bold 7 7 SUF
+35.4 461 M
+(/) s
+/F-gs-font 7 7 SF
+/Courier-Bold 7 7 SUF
+39.6 461 M
+(/ Add two numbers, Given two linked list, add two nu) s
+/F-gs-font 7 7 SF
+14.4 453 M (196:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 445 M (197:) s
+/Courier-Bold 7 7 SUF
+35.4 445 M
+(var addTwoNums = function\(l1,l2\){) s
+/F-gs-font 7 7 SF
+14.4 437 M (198:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 429 M (199:) s
+/Courier-Bold 7 7 SUF
+35.4 429 M
+(    let dummyHead = new ListNode[0];) s
+/F-gs-font 7 7 SF
+14.4 421 M (200:) s
+/Courier-Bold 7 7 SUF
+35.4 421 M
+(    let p1 = l1;) s
+/F-gs-font 7 7 SF
+14.4 413 M (201:) s
+/Courier-Bold 7 7 SUF
+35.4 413 M
+(    let p2 = l2;) s
+/F-gs-font 7 7 SF
+14.4 405 M (202:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 397 M (203:) s
+/Courier-Bold 7 7 SUF
+35.4 397 M
+(    let current = dummyHead;) s
+/F-gs-font 7 7 SF
+14.4 389 M (204:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 381 M (205:) s
+/Courier-Bold 7 7 SUF
+35.4 381 M
+(    let carry = 0;) s
+/F-gs-font 7 7 SF
+14.4 373 M (206:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 365 M (207:) s
+/Courier-Bold 7 7 SUF
+35.4 365 M
+(    while\(p1 !== null || p2 !== null\){) s
+/F-gs-font 7 7 SF
+14.4 357 M (208:) s
+/Courier-Bold 7 7 SUF
+35.4 357 M
+(        let x = \(p1 !==null\) ? p1.val: 0;) s
+/F-gs-font 7 7 SF
+14.4 349 M (209:) s
+/Courier-Bold 7 7 SUF
+35.4 349 M
+(        let y = \(p2 !==null\) ? p2.val: 0;) s
+/F-gs-font 7 7 SF
+14.4 341 M (210:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 333 M (211:) s
+/Courier-Bold 7 7 SUF
+35.4 333 M
+(        let sum = x + y + carry;) s
+/F-gs-font 7 7 SF
+14.4 325 M (212:) s
+/Courier-Bold 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 317 M (213:) s
+/Courier-Bold 7 7 SUF
+35.4 317 M
+(        carry = Math.floor\(sum /) s
+/F-gs-font 7 7 SF
+169.8 317 M
+(10\);) s
+14.4 309 M (214:) s
+14.4 301 M (215:) s
+35.4 301 M
+(        current.next = ) s
+/Courier-Bold 7 7 SUF
+132 301 M
+(new) s
+/F-gs-font 7 7 SF
+144.6 301 M
+( ListNode\(sum % 10\);) s
+14.4 293 M (216:) s
+35.4 293 M
+(        current= current.next;) s
+14.4 285 M (217:) s
+14.4 277 M (218:) s
+35.4 277 M
+(        ) s
+/Courier-Bold 7 7 SUF
+69 277 M
+(if) s
+/F-gs-font 7 7 SF
+77.4 277 M
+( \(p1 !==) s
+/Courier-Bold 7 7 SUF
+111 277 M
+(null) s
+/F-gs-font 7 7 SF
+127.8 277 M
+(\) {) s
+14.4 269 M (219:) s
+35.4 269 M
+(            p1 = p1.next;) s
+14.4 261 M (220:) s
+35.4 261 M
+(        }) s
+14.4 253 M (221:) s
+14.4 245 M (222:) s
+35.4 245 M
+(        ) s
+/Courier-Bold 7 7 SUF
+69 245 M
+(if) s
+/F-gs-font 7 7 SF
+77.4 245 M
+( \(p2 !==) s
+/Courier-Bold 7 7 SUF
+111 245 M
+(null) s
+/F-gs-font 7 7 SF
+127.8 245 M
+(\) {) s
+14.4 237 M (223:) s
+35.4 237 M
+(            p2 = p2.next;) s
+14.4 229 M (224:) s
+35.4 229 M
+(        }) s
+14.4 221 M (225:) s
+14.4 213 M (226:) s
+14.4 205 M (227:) s
+35.4 205 M
+(    }) s
+14.4 197 M (228:) s
+14.4 189 M (229:) s
+35.4 189 M
+(    ) s
+/Courier-Bold 7 7 SUF
+52.2 189 M
+(if) s
+/F-gs-font 7 7 SF
+60.6 189 M
+(\(carry>0\){) s
+14.4 181 M (230:) s
+35.4 181 M
+(        current.next = ) s
+/Courier-Bold 7 7 SUF
+132 181 M
+(new) s
+/F-gs-font 7 7 SF
+144.6 181 M
+( ListNode\(1\);) s
+14.4 173 M (231:) s
+35.4 173 M
+(    }) s
+14.4 165 M (232:) s
+14.4 157 M (233:) s
+35.4 157 M
+(    ) s
+/Courier-Bold 7 7 SUF
+52.2 157 M
+(return) s
+/F-gs-font 7 7 SF
+77.4 157 M
+( dummyHead.next;) s
+14.4 149 M (234:) s
+14.4 141 M (235:) s
+35.4 141 M
+(}) s
+14.4 133 M (236:) s
+14.4 125 M (237:) s
+/Courier-Oblique 7 7 SUF
+35.4 125 M
+(// Longest Substring without given characters) s
+/F-gs-font 7 7 SF
+14.4 117 M (238:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+14.4 109 M (239:) s
+/Courier-Bold 7 7 SUF
+35.4 109 M
+(var) s
+/F-gs-font 7 7 SF
+48 109 M
+( lengthOfLongest = \(s\) => {) s
+14.4 101 M (240:) s
+35.4 101 M
+(    let set = ) s
+/Courier-Bold 7 7 SUF
+94.2 101 M
+(new) s
+/F-gs-font 7 7 SF
+106.8 101 M
+( Set) s
+14.4 93 M (241:) s
+35.4 93 M
+(    let left = 0;) s
+14.4 85 M (242:) s
+35.4 85 M
+(    let right = 0;) s
+14.4 77 M (243:) s
+35.4 77 M
+(    let max_substring = 0;) s
+14.4 69 M (244:) s
+14.4 61 M (245:) s
+35.4 61 M
+(    ) s
+/Courier-Bold 7 7 SUF
+52.2 61 M
+(while) s
+/F-gs-font 7 7 SF
+73.2 61 M
+( \(right < s.length\){) s
+14.4 53 M (246:) s
+35.4 53 M
+(        ) s
+/Courier-Bold 7 7 SUF
+69 53 M
+(if) s
+/F-gs-font 7 7 SF
+77.4 53 M
+(\(!set.has\(s.charAt\(right\)\)\){) s
+14.4 45 M (247:) s
+14.4 37 M (248:) s
+35.4 37 M
+(            set.add\(s.charAt\(right\)\);) s
+14.4 29 M (249:) s
+14.4 21 M (250:) s
+35.4 21 M
+(            max_substring = ) s
+/Courier-Bold 7 7 SUF
+153 21 M
+(Math) s
+/F-gs-font 7 7 SF
+169.8 21 M
+(.max\(max_substring,se) s
+14.4 13 M (251:) s
+35.4 13 M
+(            right++;) s
+14.4 5 M (252:) s
+279.067 501 M (253:) s
+279.067 493 M (254:) s
+300.067 493 M
+(        }) s
+/Courier-Bold 7 7 SUF
+337.867 493 M
+(else) s
+/F-gs-font 7 7 SF
+354.667 493 M
+( {) s
+279.067 485 M (255:) s
+300.067 485 M
+(            set.delete\(charAt\(left\)\)) s
+279.067 477 M (256:) s
+300.067 477 M
+(            left++;) s
+279.067 469 M (257:) s
+300.067 469 M
+(        }) s
+279.067 461 M (258:) s
+279.067 453 M (259:) s
+300.067 453 M
+(    }) s
+279.067 445 M (260:) s
+300.067 445 M
+(    ) s
+/Courier-Bold 7 7 SUF
+316.867 445 M
+(return) s
+/F-gs-font 7 7 SF
+342.067 445 M
+( max_substring) s
+279.067 437 M (261:) s
+279.067 429 M (262:) s
+300.067 429 M
+(}) s
+279.067 421 M (263:) s
+279.067 413 M (264:) s
+279.067 405 M (265:) s
+/Courier-Oblique 7 7 SUF
+300.067 405 M
+(// This implements the sliding window technique ) s
+/F-gs-font 7 7 SF
+279.067 397 M (266:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+279.067 389 M (267:) s
+279.067 381 M (268:) s
+/Courier-Oblique 7 7 SUF
+300.067 381 M
+(// #14 Longest Common Prefix) s
+/F-gs-font 7 7 SF
+279.067 373 M (269:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+279.067 365 M (270:) s
+279.067 357 M (271:) s
+/Courier-Bold 7 7 SUF
+300.067 357 M
+(var) s
+/F-gs-font 7 7 SF
+312.667 357 M
+( longestCommonPre = ) s
+/Courier-Bold 7 7 SUF
+396.667 357 M
+(function) s
+/F-gs-font 7 7 SF
+430.267 357 M
+(\(s\){) s
+279.067 349 M (272:) s
+300.067 349 M
+(    let longest =) s
+/Courier-Bold 7 7 SUF
+371.467 349 M
+('') s
+/F-gs-font 7 7 SF
+379.867 349 M
+(;) s
+279.067 341 M (273:) s
+279.067 333 M (274:) s
+300.067 333 M
+(    ) s
+/Courier-Oblique 7 7 SUF
+316.867 333 M
+(// First check if strs is not zero) s
+/F-gs-font 7 7 SF
+279.067 325 M (275:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+300.067 325 M
+(    ) s
+/Courier-Bold 7 7 SUF
+316.867 325 M
+(if) s
+/F-gs-font 7 7 SF
+325.267 325 M
+(\(s.length === 0 \) {) s
+279.067 317 M (276:) s
+300.067 317 M
+(        ) s
+/Courier-Bold 7 7 SUF
+333.667 317 M
+(return) s
+/F-gs-font 7 7 SF
+358.867 317 M
+( longest) s
+279.067 309 M (277:) s
+300.067 309 M
+(    }) s
+279.067 301 M (278:) s
+279.067 293 M (279:) s
+300.067 293 M
+(    let compare_word = s[0];) s
+279.067 285 M (280:) s
+300.067 285 M
+(    let compare_idx = 0;) s
+279.067 277 M (281:) s
+300.067 277 M
+(    ) s
+279.067 269 M (282:) s
+300.067 269 M
+(    ) s
+/Courier-Bold 7 7 SUF
+316.867 269 M
+(for) s
+/F-gs-font 7 7 SF
+329.467 269 M
+(\(let compare_letter of compare_word\){) s
+279.067 261 M (283:) s
+300.067 261 M
+(        ) s
+/Courier-Bold 7 7 SUF
+333.667 261 M
+(for) s
+/F-gs-font 7 7 SF
+346.267 261 M
+(\(let i = 1; i<s.length;i++\) {) s
+279.067 253 M (284:) s
+300.067 253 M
+(            let curr_word = s[i]) s
+279.067 245 M (285:) s
+300.067 245 M
+(            let curr_letter = curr_word.charAt\(compar) s
+279.067 237 M (286:) s
+279.067 229 M (287:) s
+300.067 229 M
+(            ) s
+/Courier-Bold 7 7 SUF
+350.467 229 M
+(if) s
+/F-gs-font 7 7 SF
+358.867 229 M
+(\(compare_letter !== curr_letter || comp) s
+279.067 221 M (288:) s
+300.067 221 M
+(                ) s
+/Courier-Bold 7 7 SUF
+367.267 221 M
+(return) s
+/F-gs-font 7 7 SF
+392.467 221 M
+( longest;) s
+279.067 213 M (289:) s
+300.067 213 M
+(            } ) s
+279.067 205 M (290:) s
+300.067 205 M
+(        }) s
+279.067 197 M (291:) s
+300.067 197 M
+(        comparisonIndex++;) s
+279.067 189 M (292:) s
+300.067 189 M
+(        longest += compare_letter) s
+279.067 181 M (293:) s
+300.067 181 M
+(    }) s
+279.067 173 M (294:) s
+279.067 165 M (295:) s
+300.067 165 M
+(    ) s
+/Courier-Bold 7 7 SUF
+316.867 165 M
+(return) s
+/F-gs-font 7 7 SF
+342.067 165 M
+( longest;) s
+279.067 157 M (296:) s
+300.067 157 M
+(}) s
+279.067 149 M (297:) s
+279.067 141 M (298:) s
+279.067 133 M (299:) s
+/Courier-Oblique 7 7 SUF
+300.067 133 M
+(// Valid Palindrom) s
+/F-gs-font 7 7 SF
+279.067 125 M (300:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+279.067 117 M (301:) s
+279.067 109 M (302:) s
+/Courier-Oblique 7 7 SUF
+300.067 109 M
+(// Algorithms ) s
+/F-gs-font 7 7 SF
+279.067 101 M (303:) s
+/Courier-Oblique 7 7 SUF
+/F-gs-font 7 7 SF
+_R
+S
+%%Trailer
+%%Pages: 2
+%%DocumentNeededResources: font Times-Roman Courier-Oblique Courier-Bold 
+%%+ font Courier Times-Bold 
+%%EOF

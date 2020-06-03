@@ -30,9 +30,25 @@ function RenderDish(props) {
 
 // This function is used to export the DishDetail functions
 
-function DishDetail(props) {
+class DishDetail extends Component {
 
-    return(<RenderDish dish = {props.dish}/>)
+    constructor(props){
+    super(props);
+    this.state={
+        dishes:DISHES
+    };
+}
+
+    static navigationOptions ={
+        title: 'Dish Details'
+    }
+
+
+
+    render() {
+        const dishId =this.props.navigation.getParam("dishId",'') // Allows us to get parameters passed in
+        return(<RenderDish dish = {this.props.dishes[+dishId]}/>) // The plus changes string into number
+    }
 
 }
 

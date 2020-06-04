@@ -69,7 +69,7 @@ class Main extends Component{
             // anonymous funciton criteria
 
             // Th platform below is using the Platform Object imported aboce.
-            <View style = {{flex:1}}> 
+            <View style = {{flex:1, paddingTop: }}> 
                 
 
                 <MenuNavigator/>

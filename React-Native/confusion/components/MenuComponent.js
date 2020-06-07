@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import { View,FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import {DISHES} from '../shared/dishes';
+import { DISHES } from '../shared/dishes';
 
 
 // In the navigation we change this to a class. in order to use this in React
@@ -55,7 +55,7 @@ class Menu extends Component {
         return(
 
         <FlatList  
-            data = {this.props.dishes}
+            data = {this.state.dishes}
             renderItem = {renderMenuItem}
             keyExtractor = {item => item.id.toString()}
             />

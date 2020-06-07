@@ -10,23 +10,23 @@ import { createStackNavigator } from '@react-navigation/stack';
 // createStackNavigator function taht takes an object as an arg
 
 
-const MenuNavigator = createStackNavigator()
-//     Menu: {screen:Menu}, // This is how you specify various components 
-//     Dishdetail: { screen: DishDetail}
-// }, {
-//     initialRouteName: 'Menu',
-//     // Navigation Options is common on all of the 
-//     navigationOptions: {
-//         headerStyle: {
-//             backgroundColor:'#512DA8'
-//         },
-//         headerTintColor:'#fff',
-//         headerTitleStyle: {
-//             color:'#fff'
-//         }
+const MenuNavigator = createStackNavigator({
+    Menu: {screen:Menu}, // This is how you specify various components 
+    Dishdetail: { screen: DishDetail}
+}, {
+    initialRouteName: 'Menu',
+    // Navigation Options is common on all of the 
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor:'#512DA8'
+        },
+        headerTintColor:'#fff',
+        headerTitleStyle: {
+            color:'#fff'
+        }
 
-//     }
-// }) THIS ENTIRE CODE PARAM IS DEPRECATED
+    }
+}) 
 
 
 
@@ -37,21 +37,21 @@ class Main extends Component{
     //The state of the view Menu and SelectedDish will be 
     // Held in MenuComponent
     
-    // constructor(props) {
-    //     super(props);
-    //     this.state={
-    //         dishes:DISHES,
-    //         selectedDish:null,
+    constructor(props) {
+        super(props);
+        this.state={
+            dishes:DISHES,
+            selectedDish:null,
 
-    //     }
-    // }
+        }
+    }
 
     // // This function sets the state to the selectedState
     // // this is supplied to the Menu as a parameter
 
-    // onDishSelect(dishId) {
-    //     this.setState({selectedDish:dishId});
-    // }
+    onDishSelect(dishId) {
+        this.setState({selectedDish:dishId});
+    }
 
 
 
@@ -69,7 +69,7 @@ class Main extends Component{
             // anonymous funciton criteria
 
             // Th platform below is using the Platform Object imported aboce.
-            <View style = {{flex:1, paddingTop: }}> 
+            <View style = {{flex:1, paddingTop: 0 }}> 
                 
 
                 <MenuNavigator/>
